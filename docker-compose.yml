@@ -14,15 +14,3 @@ services:
     ports:
       - "9000:9000"
       - "9001:9001"
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx_proxy
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/certs:/etc/nginx/certs
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - minio
