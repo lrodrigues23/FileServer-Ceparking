@@ -1,15 +1,28 @@
 version: '3.8'
 
 services:
+
   minio:
     image: minio/minio:latest
     container_name: minio
-    ports:
-      - "9000:9000"   # Porta da API
-      - "9001:9001"   # Porta da interface web
-    environment:
-      MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: senha123
     volumes:
-      - ./data:/data
+      - ./minio/data:/data
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
     command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/certs:/etc/nginx/certs
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - minio
